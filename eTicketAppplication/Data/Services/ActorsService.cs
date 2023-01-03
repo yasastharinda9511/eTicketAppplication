@@ -1,32 +1,52 @@
 ﻿using eTicketAppplication.Models;
+using eTickets.Data;
+using Microsoft.EntityFrameworkCore;
+using System.Runtime.InteropServices;
 
 namespace eTicketAppplication.Data.Services
 {
     public class ActorsService : IActorService
     {
-        public void Add(Actor actor)
+
+        private readonly AppDbContext context;
+
+        public ActorsService(AppDbContext context)
         {
-            throw new NotImplementedException();
+              
+              this.context = context;
         }
 
-        public void Delete(int id)
+
+        public async Task AddAsync(Actor actor)
         {
-            throw new NotImplementedException();
+            await context.Actors.AddAsync(actor);
+            await context.SaveChangesAsync();
         }
 
-        public IEnumerable<Actor> GetAll()
+        public async Task DeleteAsync(int id)
         {
-            throw new NotImplementedException();
+            var result = await context.Actors.FirstOrDefaultAsync(x => x.Id == id); 
+            context.Actors.Remove(result);
+            await context.SaveChangesAsync();
+        }
+        public async Task<Actor> GetByIdAsync(int id)
+        {
+           var result = await context.Actors.FirstOrDefaultAsync(x => x.Id == id);
+           return result;
         }
 
-        public Actor GetById()
+        public async Task<Actor> UpdateAsync(int id, Actor newActor)
         {
-            throw new NotImplementedException();
+            context.Update(newActor);
+            await context.SaveChangesAsync();
+            return newActor;
         }
 
-        public Actor Update(int id, Actor newActor)
+        public async Task<IEnumerable<Actor>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            var result = await context.Actors.ToListAsync();
+            return result;
         }
+
     }
 }

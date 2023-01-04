@@ -217,7 +217,7 @@ namespace eTicketAppplication.Data
                     {
                         new Actor_Movie()
                         {
-                            ActorId = 1,
+                            ActorId = 3,
                             MovieId = 1
                         }
                     });

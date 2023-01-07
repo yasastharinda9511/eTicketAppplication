@@ -1,12 +1,13 @@
 ﻿using eTickets.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using System.Linq.Expressions;
 
 namespace eTicketAppplication.Data.Base
 {
     public class EntityBaseRespository<T> : IEntityBaseRepository<T> where T : class,IEntityBase, new()
     {
-        private readonly AppDbContext context;
+        protected readonly AppDbContext context;
 
         public EntityBaseRespository(AppDbContext context)
         {
@@ -28,6 +29,13 @@ namespace eTicketAppplication.Data.Base
         }
 
         public async Task<IEnumerable<T>> GetAllAsync() => await context.Set<T>().ToListAsync();
+
+        public async Task<IEnumerable<T>> GetAllAsync(params Expression<Func<T, object>>[] includeProperties)
+        {
+            IQueryable<T> query = context.Set<T>();
+            query = includeProperties.Aggregate(query, (current,includeProperty)=> current.Include(includeProperty));
+            return await query.ToListAsync();
+        }
 
         public async Task<T> GetIdAsync(int id) => await context.Set<T>().FirstOrDefaultAsync(x => x.Id == id);
         

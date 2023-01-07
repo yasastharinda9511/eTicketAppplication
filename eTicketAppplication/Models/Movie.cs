@@ -1,10 +1,11 @@
 ﻿using eTicketAppplication.Data;
+using eTicketAppplication.Data.Base;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace eTicketAppplication.Models
 {
-    public class Movie
+    public class Movie : IEntityBase
     {
         [Key]
         public int Id { get; set; }
